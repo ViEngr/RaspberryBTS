@@ -46,8 +46,20 @@ the last thing to do is to reboot to make sure everything is working!
 intsll telnet:rs apt-get install telnet
 check noise on the channel picked: mbts noise
 
+Patch yatebts configure error:
+# Dry-run first to make sure there are no issues
+[yatebts-tarball]$ patch --dry-run -p1 -i yatebts-5.0.0-gcc6.patch
+checking file mbts/GPRS/MSInfo.cpp                                      
+checking file mbts/SGSNGGSN/Sgsn.cpp                                    
+Hunk #2 succeeded at 253 (offset 1 line).                               
 
-Try to add php5(did not worked)
+# No issues, so actually apply the patch
+[yatebts-tarball]$ patch -p1 -i yatebts-5.0.0-gcc6.patch
+
+# Proceed with normal build steps
+
+
+Try to add php5(did not worked), worked php5.6
 
 sudo echo "deb http://mirrordirector.raspbian.org/raspbian/ jessie main contrib non-free rpi" >> /etc/apt/sources.list
 sudo apt-get update
