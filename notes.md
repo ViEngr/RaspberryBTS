@@ -40,3 +40,13 @@ Comment=system monitoring tool.
 Categories=Utility;
 
 the last thing to do is to reboot to make sure everything is working!
+
+
+-----------------
+
+
+Try to add php5(did not worked)
+
+sudo echo "deb http://mirrordirector.raspbian.org/raspbian/ jessie main contrib non-free rpi" >> /etc/apt/sources.list
+sudo apt-get update
+sudo update-alternatives --set php /usr/bin/php5
