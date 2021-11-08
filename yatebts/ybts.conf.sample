@@ -10,7 +10,7 @@
 ; For non-multiband units this value must match the hardware.
 ; Valid values: 850, 900, 1800, 1900.
 ; THERE IS NO DEFAULT, YOU MUST SET A VALUE HERE!
-Radio.Band=
+Radio.Band=900
 
 ; Radio.C0: integer: The C0 ARFCN, also base ARFCN for a multi-ARFCN configuration.
 ; Valid values depend on the selected Radio.Band:
@@ -19,7 +19,7 @@ Radio.Band=
 ;  1800 (DSC1800): 512..885
 ;  1900 (PCS1900): 512..810
 ; THERE IS NO DEFAULT, YOU MUST SET A VALUE HERE!
-Radio.C0=
+Radio.C0=111
 
 ; Identity.MCC: string: Mobile Country Code, must have three digits.
 ; The value 001 is reserved for for test networks.
