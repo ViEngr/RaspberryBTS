@@ -43,6 +43,8 @@ the last thing to do is to reboot to make sure everything is working!
 
 
 -----------------
+intsll telnet:rs apt-get install telnet
+check noise on the channel picked: mbts noise
 
 
 Try to add php5(did not worked)
@@ -54,5 +56,6 @@ sudo update-alternatives --set php /usr/bin/php5
 
 -------------
 
-Fix missing libusb
+Fix missing libusb 
 find /  -name  libusb-1.0-0*
+apt list --installed libusb*
