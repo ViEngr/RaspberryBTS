@@ -3,7 +3,7 @@
 case "$1" in
   start)
     # Executes auto start script
-    sudo sh /usr/local/share/yate/scripts/autostart.sh
+    sh /usr/local/share/yate/scripts/autostart.sh
     ;;
   *)
     ;;
