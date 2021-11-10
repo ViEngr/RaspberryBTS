@@ -1,3 +1,3 @@
 #!/bin/bash
 yate -s &
-chromium-browser --full-sceen http://localhost/nib &
+chromium-browser --full-screen http://localhost/nib &
