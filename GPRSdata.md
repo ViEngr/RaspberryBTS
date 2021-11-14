@@ -71,3 +71,29 @@ Extra tip: In case you prefer adding the rules straight to iptables and not to t
 # /etc/init.d/iptables-persistent save
 This command takes the current configuration of your iptables and saves it to the rules.v4 file.
 
+--------
+
+Allow IP Forwarding for GPRS data
+By default, IP Forwarding is disabled on any modern Linux distro (file /proc/sys/net/ipv4/ip_forward contains a 0)
+
+To tell your kernel that IP forwarding is allowed on your system, change the 0 (false) to 1 (true) by typing:
+
+echo 1 > /proc/sys/net/ipv4/ip_forward
+
+To preserve these changes after reboot edit the line that says net.ipv4.ip_forward = 0 to net.ipv4.ip_forward = 1 from /etc/sysctl.conf file.
+To see if forwarding is enabled or not, you can query the sysctl kernel value net.ipv4.ip_forward
+> sysctl net.ipv4.ip_forward
+net.ipv4.ip_forward = 1
+
+
+Add iptables rules
+Install iptables
+urpmi iptables
+Start iptables service
+systemctl start iptables.service
+Tell iptables to forward packets from your internal network
+
+iptables -A POSTROUTING -t nat -s 192.168.99.0/24 ! -d 192.168.99.0/24 -j MASQUERADE
+
+Preserve iptables rules after reboot
+iptables-save > /etc/sysconfig/iptables
