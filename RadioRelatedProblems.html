@@ -1,0 +1,212 @@
+This section will go through the typical problems a user can encounter when using YateBTS.
+
+Radio-related problems usually fall into these broad categories:
+
+Uplink Problems, Specific to the RACH - The MBTS component is receiving RACH bursts from the handset, but fails to decode them.
+Uplink Problems, General - There are speech problems in the uplink side of a phone call, and sometimes with slow call setup signaling.
+Downlink Problems - There are speech problems in the downlink side of a phone call, and sometime with slow call setup signaling.
+Typical causes of radio-related problems are:
+
+physical damage, like mechanical damage or corrosion
+interference
+power limitations, due to range or misconfiguration
+excessive power, due to misconfiguration
+Contents [hide] 
+1 Configuration Checks
+2 Machine Checks
+3 Diagnosing Radio Problems with Test Calls
+4 Diagnosing Radio Problems with the "chans" Command
+4.1 What do those "chans" numbers mean?
+4.2 Diagnosing with "chans" Output
+4.2.1 Path Loss Symmetry
+4.2.2 The "pathloss" option
+5 Using the "noise" Command
+6 Diagnosing RACH-Related Radio Problems
+7 Fixing Radio-Related Problems
+7.1 Uplink Interference and Multipath
+7.2 High Path Loss (Uplink or Downlink)
+7.2.1 Symmetric
+7.2.2 Asymmetric
+Configuration Checks
+Start a diagnosis by checking the configuration. Unless you have a specific, known reason, all of the following parameters should match their factory-set values:
+
+MS.Power.Max
+Radio.RSSITarget
+Radio.RxGain
+MinimumRxRSSI
+RadioFrequencyOffset
+TxAttenOffset
+Radio.MaxExpectedDelaySpread
+To verify this settings you can check the parameters in the ybts.conf configuration file or use the 'mbts config' telnet command.
+
+Ex:
+
+mbts config MS.Power.Max
+GSM.MS.Power.Max 33     [default]
+Machine Checks
+CPU performance problems can cause the same symptoms as radio problems. Use the Linux 'top' utility to make sure that the CPU is not overloaded.
+
+Diagnosing Radio Problems with Test Calls
+A good way to test uplink vs. downlink is to use the echo test and the tone test together:
+
+Echo Test	Tone Test	Diagnosis
+good	good	no problem
+good	poor	not a radio problem
+poor	good	uplink problem
+poor	poor	downlink problem and possible uplink problem
+no service	downlink problem or network problem
+failure to connect	uplink problem, possibly RACH-specific
+Diagnosing Radio Problems with the "chans" Command
+If you can get a phone call to connect, even with poor quality, the 'mbts chans' command is a powerful diagnosis tool.
+
+During either the tone or echo test, you can use the mbts chans command to collect performance measurements from both the uplink and the downlink. The fields of the chans command relevant to this discussion are:
+
+UPFER RSSI TXPWR TXTA DNLEV DNBER
+pct    dB   dBm  sym   dBm   pct 
+
+
+What do those "chans" numbers mean?
+The uplink performance numbers are measured by the MBTS itself and are updated roughly every half second. These numbers are:
+
+Uplink RSSI ("RSSI-dB"), given in dB (negative) relative to the full scale input of the radio. This is the power level of the handset as seen by the MBTS. This value is normally within a few dB of the value given in the 'gsm_advanced::Radio.RSSITarget' configuration parameter.
+Uplink FER ("UPFER-pct"), as a percentage, which is normally close to zero when Uplink RSSI is > -45 dB.
+The downlink performance numbers are reported by the handset on the SACCH, which means that they are updated only when the channel allows data to be received from the phone. Normally, these are also updated roughly every half second, but these updates can stop or become less frequent if the channel quality is poor.
+
+Downlink RSSI ("DNLEV-dBm"), given in dBm. This is the received power level of the MBTS as seen by the handset. It is normally > -100 dBm.
+Downlink BER ("DNBER-pct"), given in percent. This is normally close to zero for downlink RSSI > -100 dBm.
+The handset also reports its actual transmitter power level, in dBm, displayed as "TXPWR-dBm".
+
+
+
+Diagnosing with "chans" Output
+The output of "chans" can be used to diagnose radio problems using the following table:
+
+UPFER	RSSI	TXPWR	DNLEV	DNBER	Diagnosis
+pct	dB	dBm	dBm	pct	
+small	> -45	anything	> -100	small	normal
+high	> -45	anything	anything	anything	uplink interference or multi-path
+high	< -45	>= 30	anything	anything	high uplink path loss
+high	< -45	< 30	anything	anything	poor uplink power control
+anything	anything	anything	> -100	high	downlink interference or multi-path
+anything	anything	anything	< -100	high	high downlink path loss or low output power
+Path Loss Symmetry
+Here is another way to help distinguish between uplink problems and downlink problems: "path loss symmetry".
+
+"Path loss" is the signal loss from the output of the transmitter to the input of the receiver, due to the propagation of the signal through space, usually expressed in dB Path losses are anywhere from 60 to 160 dB for GSM radio links and vary tremendously with distance and obstacles along the path (trees, buildings, hills, etc.). Across this huge range, though, path losses are normally close to symmetric for similar frequencies between the same two antennas. Uplink and downlink path losses in a mobile network are about the same, on average and most of the time. By knowing path loss and comparing uplink and downlink path loss, we can better isolate radio performance problems.
+
+The downlink path loss can be estimated from the "chans" output as:
+
+P_up (dBm) = TXPWR (dB) + RSSI (dB) + 60 (dBm)
+The factor of 60 dBm is due to that fact that a full scale input on the radio corresponds to a power level of -60 dBm at the antenna input. Note that this estimate is not valid when RSSI is > -3 dB, since the receiver is close to saturation.
+
+The uplink path loss is estimated as:
+
+P_dn (dBm) = actual downlink power (dBm) + DNLEV (dB)
+Note that this measurement is valid only when DNLEV is < -40 dBm, since that is the normal saturation point of the handset.
+
+The uplink and downlink path loss, if both are valid, should be within 10 dB of each other. If they are not within 10 dB of each other, even after moving the handset around about 0.5 meter, that indicates a problem in the link with the larger path loss
+
+The "pathloss" option
+This option prints the uplink and downlink path loss for the existing GSM channels, together with the noise value, maximum output power of the device and the current power attenuation.
+
+This is the output generated by the pathloss option when using YateBTS with a RAD1 radio with no antenna on the RX side:
+
+      chan UPFER RSSI TXPWR DNLEV DNBER P_up P_dn   Diagnosys
+      type pct    dB   dBm  dBm   pct   dB   dB           
+SDCCH/4-0  0.00    0    33  -111  0.00 83.00 144.00  inactive
+SDCCH/4-1  0.00    0    33  -111  0.00 83.00 144.00  inactive
+SDCCH/4-2  0.00    0    33  -111  0.00 83.00 144.00  inactive
+SDCCH/4-3  0.00    0    33  -111  0.00 83.00 144.00  inactive
+    TCH/F  0.00    0    33  -111  0.00 83.00 144.00  inactive
+    TCH/F  0.00    0    33  -111  0.00 83.00 144.00  inactive
+    TCH/F  0.00  -47     5   -48  1.13 102.00 81.00  bad uplink path
+    TCH/F  0.00    0    33  -111  0.00 83.00 144.00  inactive
+    TCH/F  0.00    0    33  -111  0.00 83.00 144.00  inactive
+    TCH/F  0.00    0    33  -111  0.00 83.00 144.00  inactive
+    TCH/F  0.00    0    33  -111  0.00 83.00 144.00  inactive
+Current power attenuation: 0 dB
+Maximum output power:      33 dBm
+noise RSSI is -69 dB wrt full scale
+MS RSSI target is -50 dB wrt full scale
+How to use it:
+
+mbts chans pathloss
+Possible results for the Diagnosys:
+
+"bad uplink path" when P_up exceeds P_dn by 15 dB
+"bad downlink path" when P_dn exceeds P_up by 15 dB
+"inactive" for the inactive channels
+"normal" otherwise
+If the noise level exceeds -65 dB you will see a warning:
+
+WARNING: excessive uplink noise - possible interference or rxgain miscalibration.
+Using the "noise" Command
+The "noise" command is simple: it returns the receiver noise level in dB relative to full scale. This number should be about -55 dB +/- 3 dB, which corresponds to a noise floor of -115 dBm.
+
+If the noise level is consistently < -60 dB, it means that the receiver gain is set too low.
+
+If this noise level is consistently > -50 dB, it can mean one of two things. Either:
+
+the receiver gain is set too high or
+there is interference in the uplink side of the link.
+Diagnosing RACH-Related Radio Problems
+If your handset shows service but cannot connect a call, you must look at the RACH channel to diagnose the problem. RACH diagnostic activity appears in the output log. To see it, set the logging level for {{{RadioResource.cpp}}} to {{{INFO}}}.
+
+RACH activity	RACH RSSI	Diagnosis
+uncorrelated with handset activity, every few seconds	< -40 dB	normal false alarms
+uncorrelated with handset activity, several per second	< -40 dB	uplink interference or misconfigured gain
+correlated with handset access attempts	> -20 dB	normal, see Note 1
+correlated with handset access attempts	< -20 dB	misconfiguration or excessive uplink path loss
+Note 1: If the RACH activity is normal and calls are not connecting, then there is either radio channel congestion or a problem in a higher networking layer.
+
+Fixing Radio-Related Problems
+Uplink Interference and Multipath
+Uplink interference results from another radio transmitter in the area sending signals on the same frequency as your uplink ARFCN. If the transmitted signal is particularly powerful, it can be a problem anywhere in your uplink band, not just on your specific uplink ARFCN. Interference can also come from "unintentional radiators", like poorly-shielded computer and/or networking equipment near the antenna.
+
+Multipath is the radio equivalent of a strong, distracting echo that makes it difficult for the receiver to correctly decode the uplink signal.
+
+Uplink interference and multipath share a common symptom: excessive uplink FER even when the uplink RSSI is at normal levels. There are some differences, though, that allow you to tell them apart, as shown in the following table.
+
+Action / Check	Uplink Interference	Multipath
+check "noise" command	elevated noise ( > -50)	normal
+raise value of MinimumRxRSSI	lower FER	same or higher FER
+raise value of Radio.MaxExpectedDelaySpread	same FER	lower FER
+check at different times	effect may vary with time	effect is constant over time
+As the above table indicates, uplink interference can be mitigated by raising MinimumRxRSSI and multipth can be mitigated by raising Radio.MaxExpectedDelaySpread. For each of these there is a price to be paid.
+
+Raising MinimumRxRSSI will lower the battery life of handsets in the service area. Also, even with this mitigation, the cell will not be able to achieve its full intended service range unless the interference is removed or avoided. Often, the best solution is to scan the uplink band (an corresponding downlink band) to choose an ARFCN with less interference.
+
+Raising Radio.MaxExpectedDelaySpread will increase the computational load of the MBTS, but it is usually the only solution to the multipath problem.
+
+High Path Loss (Uplink or Downlink)
+High path loss is usually due to distance or equipment damage, but can also be caused by misconfiguration of the "advanced" parameters.
+
+Symmetric
+Path loss over large distances is normal; you may just be at the operating limit of the radio link. If your path loss is large and generally symmetric on both uplink and downlink, this is probably the case. The possible solutions to this problem are:
+
+higher antenna gain
+high antenna placement
+lower cable loss between the antenna and radio
+by using a better cable or
+by eliminating excess cable length from the path
+more output power on the downlink, if
+the downlink quality is poorer than the uplink quality and
+the output power is not already high:
+>= 5 W/ARFN in a high band (1800/1900) or
+>= 10 W in a low band (850/900)
+Note that more downlink power, beyond the levels given above, will not improve overall performance, since the power output of the handset is usually limited to 1 W in the high bands and 2 W in the lower bands. Add more downlink power beyond these limits will just result in an asymmetric link.
+
+If the path loss is excessively even over modest distances, and your uplink and downlink share a common antenna through a duplexer, then the problem could be in the shared antenna, the duplexer, or the cabling between them.
+
+Check that the antenna is properly installed, clear of obstructions in its near field.
+Check for cable damage.
+Check for loose connectors. In outdoor installations, an improperly sealed connector can allow water to enter a cable, leading to internal corrosion which can be difficult to diagnose directly. If you find a loose connector in an outdoor installation than has been rained on, chances are high that the entire cable is ruined.
+Check that all connectors are undamaged, free of corrosion and properly torqued.
+Asymmetric
+Asymmetric path loss means that the path loss is notably larger on one side of the link than the other. This usually means damage to some component that is specific to one side of the link, but can also be due to misconfiguration or mis-calibration. Double check that all receive and transmit gain parameters match their calibrated factory settings.
+
+If all configuration parameters are correct, possible causes of asymmetric path loss are:
+
+Excessive downlink path loss probably means a failure of the power amplifier or the power supply for the power amplifier.
+Excessive uplink path loss probably means a failure of an LNA or its associated power supply.
+A damaged duplexer can also produce asymmetric path loss. However, damage to cavity duplexers is usually cause be excessive mechanical shock and a unit that has suffered such a shock will also show other signs of mechanical abuse.
