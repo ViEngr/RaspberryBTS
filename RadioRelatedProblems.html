@@ -1,5 +1,39 @@
 This section will go through the typical problems a user can encounter when using YateBTS.
 
+900 band filter from Mouser ex.: D5PF942M5M3G9-Z
+https://www.mouser.com/c/passive-components/signal-conditioning/?q=942&instock=y
+https://www.mouser.com/c/passive-components/signal-conditioning/?q=897&instock=y
+
+Pre-Amplifier with PSA4-5043+: http://www.w1ghz.org/PCBproj/Universal_MMIC_Preamp_or_PA.pdf
+Amplifier with GVA-84+ or PHA-1H+: http://www.w1ghz.org/small_proj/GVA-84_amplifier.pdf
+
+
+https://nuand.com/forums/viewforum.php?f=6
+
+antenna: https://nuand.com/forums/viewtopic.php?f=4&t=3578
+
+mbts rawconfig rxgain 75
+defined new config rxgain as "75"
+mbts noise 
+noise RSSI is -35 dB wrt full scale
+NOTE: Excessive UL noise will degrade performance. Normal UL noise level is -64 or lower.
+MS GSM RSSI target is -50 dB wrt full scale
+NOTE: GSM UL RSSI margin -15 too low for this noise level. Should raise GSM.Radio.RSSITarget to -27 dB or higher.
+MS GPRS RSSI target is -25 dB wrt full scale
+NOTE: GPRS UL RSSI margin 10 too low for this noise level. Should raise GPRS.MS.Power.RSSITarget to -21 dB or higher.
+mbts rawconfig rxgain 0
+rxgain changed from "75" to "0"
+mbts noise 
+noise RSSI is -34 dB wrt full scale
+NOTE: Excessive UL noise will degrade performance. Normal UL noise level is -64 or lower.
+MS GSM RSSI target is -50 dB wrt full scale
+NOTE: GSM UL RSSI margin -16 too low for this noise level. Should raise GSM.Radio.RSSITarget to -26 dB or higher.
+MS GPRS RSSI target is -25 dB wrt full scale
+NOTE: GPRS UL RSSI margin 9 too low for this noise level. Should raise GPRS.MS.Power.RSSITarget to -20 dB or higher.
+
+
+
+
 Radio-related problems usually fall into these broad categories:
 
 Uplink Problems, Specific to the RACH - The MBTS component is receiving RACH bursts from the handset, but fails to decode them.
