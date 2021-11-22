@@ -252,3 +252,14 @@ If all configuration parameters are correct, possible causes of asymmetric path 
 Excessive downlink path loss probably means a failure of the power amplifier or the power supply for the power amplifier.
 Excessive uplink path loss probably means a failure of an LNA or its associated power supply.
 A damaged duplexer can also produce asymmetric path loss. However, damage to cavity duplexers is usually cause be excessive mechanical shock and a unit that has suffered such a shock will also show other signs of mechanical abuse.
+
+      
+These are the common reasons for the phone not to see the network:
+
+- Hardware or USB errors corrupting the beacon transmission. If this were happening you would get a lot of warnings. (The "TOA error" message at the "ALL" debug level is not a warning. It is part of a routine timing calculation.)
+
+- Weak signal. What kind of antenna are you using?  Also, set Radio.PowerManager.MaxAttenDB and Radio.PowerManager.MinAttenDB both to 0 maximize output power.
+
+- Excessive CPU loading corrupting the beacon transmission. The log shows a few places where the radio ran late and dropped the signal, but not so much that it should be a problem. What does "top" show for yate when you are running YateBTS?
+
+- Bad frequency calibration. Have you enabled NTP on your computer and BladeRF frequency calibration in YateBTS?
