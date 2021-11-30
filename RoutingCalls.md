@@ -8,7 +8,9 @@ line=test_sip will tell Yate on which gateway/account to route the call.
 
 --------
 
-
+https://docs.yate.ro/wiki/How_to_do_routing_using_javascript
+https://docs.yate.ro/wiki/Regular_expressions
+https://docs.yate.ro/wiki/Accfile
 
 ------------
 This is the regexroute.conf file:
