@@ -14,3 +14,5 @@ Amplificators:
  4W https://www.mouser.com/datasheet/2/412/QPA9908_Data_Sheet-1628682.pdf
  15dBm 35mW https://www.mouser.com/ProductDetail/Qorvo/SBB3089Z?qs=p6lVfQR1GSrp5Il58B1XdQ%3D%3D
  (bladeRF 6dBm=4mW 100ft)
+ 
+ https://www.mouser.com/c/semiconductors/wireless-rf-integrated-circuits/rf-amplifier/?mounting%20style=SMD%2FSMT&type=Power%20Amplifiers&instock=y&sort=pricing
