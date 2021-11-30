@@ -10,3 +10,7 @@ D5DA* (FSDCSR8H*) duplexers https://ds.yuden.co.jp/TYCOMPAS/ut/detail?pn=FSDCSR8
 https://www.digikey.com/en/products/detail/raltron-electronics/RSD-897-500-942-500-1814-TR-NS1/15278949
 15dbm at 921MHz: https://www.mouser.com/ProductDetail/RFMi/SF2259H
 
+Amplificators:
+ 4W https://www.mouser.com/datasheet/2/412/QPA9908_Data_Sheet-1628682.pdf
+ 15dBm 35mW https://www.mouser.com/ProductDetail/Qorvo/SBB3089Z?qs=p6lVfQR1GSrp5Il58B1XdQ%3D%3D
+ (bladeRF 6dBm=4mW 100ft)
