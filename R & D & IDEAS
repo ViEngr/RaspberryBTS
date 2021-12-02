@@ -20,3 +20,98 @@ https://github.com/strcpyblog this yateBTS was used from 2015
 
 https://blog.fireheart.in/a?ID=00400-17acd48d-d425-4bf3-b649-6ddf43e29b17
 https://lms.onnocenter.or.id/wiki/index.php/OpenBTS:_BladeRF_YateBTS
+
+
+http://openbts.org/site/wp-content/uploads/ebook/Getting_Started_with_OpenBTS_Range_Networks.pdf
+https://lms.onnocenter.or.id/wiki/index.php/OpenBTS
+https://youtu.be/sTVJK5ZmtVI
+
+
+
+Yate and YBTS
+YBTS
+YBTS is a Yate module that implements the majority of the GSM Layer 3 functionality. YBTS uses MBTS as a modem. MBTS supervises the physical and link layers and also does radio resource management. MBTS forwards all received frames to YBTS that implements control functions.
+
+In other words, MBTS sets up the radio channel and forwards all information received on that channel to YBTS. YBTS then sees if it's a call/SMS/USSD/registration/etc. request and sends a specific Yate message for that type of request. Other Yate modules or custom applications handle this messages. An example of this lays in the Network in a PC application that comes by default with YateBTS. YBTS is the link between MBTS, Yate and its many functionalities.
+
+Yate
+The YateBTS design derives from one of Yate's main design mantras: "Holding the code base as simple as possible and adding functionality as needed allows one to find the best balance between desired functionality, performance and stability."
+
+The architecture of Yate is based on a message passing system and can be divided into four main parts as you can see below:
+
+Core - The Core where encapsulations for sockets, threads and others primitives can be found
+Engine - The engine holds the base C++ classes of Yate and connects together all components
+Modules - The most real functionality is provided by modules loaded at runtime. Modules are:
+dynamic libraries loaded as plugins in the engine (YBTS is one such module)
+Javascript applications interpreted at runtime by Yate's Javascript interpretor. (Network in a PC is a Javascript application)
+or external applications started by a specific module (extmodule) that allows them to talk to the engine and other modules.
+External applications can be written in a multitude of scripting languages such as PHP, Python, Perl etc and Yate comes by default with libraries in this languages that help you develop custom functionality.
+
+Messages -- The signalling between Yate modules (either plugins or external modules) is performed by using messages. They provide extensibility, customization and technology independence. Each module that needs something from another or tries to notify about some event creates and emits a message. The message flows through the Engine which delivers it to the proper target which handles it.
+Reviewing the richness of protocols and methods implemented in Yate, you begin to understand how versatile this software can be. It is worth mentioning that VoIP or PBX is just one of the implemented modules and not the core functionality. In fact Yate is a multifunctional type of product, that can be used in many situations, where distance communication is to take place. Some types of modules that could bring great value when used together with YateBTS are: billing, monitoring and the various software drivers that Yate offers, such as SIP, IAX, Jabber (public version) and SS7 (in the commercial version of YateBTS).
+
+For a more in-depth description of Yate modules functionalities please see: Modules
+
+MBTS
+As stated above, MBTS acts as a modem. MBTS supervises the psyhical (L1) and link layers (L2) and also does radio resource management (part of L3). After the radio channel is established it forwards the received frames to YBTS.
+
+Layer 3 Radio Resource Management
+The Um network layer, or Layer 3 is defined in GSM 04.07 and 04.08 and has multiple sublayers. The lowest of these sublayers is the radio resource management layer, which is responsible for allocating, assigning and releasing radio channels between the handset and the network.
+
+Layer 2 Functions
+GSM layer 2 LAPDm, also known as the data link layer, is defined in GSM 04.05 and 04.06. LAPDm is the mobile analog to ISDN's LAPD.
+
+Layer 1 Functions
+The Um physical layer is defined in the GSM 05.xx series of specifications, with the introduction and overview in GSM 05.01. For most channels, Um L1 transmits and receives 184-bit control frames or 260-bit vocoder frames over the radio interface in 148-bit bursts with one burst per timeslot.
+
+These are its main functions:
+
+Radiomodem. This is the actual radio transceiver, defined largely in GSM 05.04 and 05.05.
+Multiplexing and Timing. GSM uses TDMA to subdivide each radio channel into as many as 16 traffic channels or as many as 64 control channels. The multiplexing patterns are defined in GSM 05.02.
+Coding. This sub-layer is defined on GSM 05.03.
+Closed Loop Power Control
+Closed Loop Timing Control
+Radiomodem
+
+GSM uses GMSK or 8PSK modulation with 1 bit per symbol which produces a 13/48 MHz (270.833 kHz or 270.833 K symbols/second) symbol rate and a channel spacing of 200 kHz. Since adjacent channels overlap, the standard does not allow adjacent channels to be used in the same cell. The standard defines several bands ranging from 400 MHz to 1990 MHz. Uplink and downlink bands are generally separated by 45 or 50 MHz (at the low-frequency end of the GSM spectrum) and 85 or 90 MHz (at the high-frequency end of the GSM spectrum). Uplink/downlink channel pairs are identified by an index called the ARFCN. Within the BTS, these ARFCNs are given arbitrary carrier indexes C0..Cn-1, with C0 designated as a Beacon Channel and always operated at constant power.
+
+GSM has physical and logical channels. The logical channel is time-multiplexed into 8 timeslots, with each timeslot lasting for 0.577ms and having 156.25 symbol periods. These 8 timeslots form a frame of 1,250 symbol periods. Channels are defined by the number and position of their corresponding burst period. The capacity associated with a single timeslot on a single ARFCN is called a physical channel (PCH) and referred to as "CnTm" where n is a carrier index and m is a timeslot index (0-7).
+
+Each timeslot is occupied by a radio burst with a guard interval, two payload fields, tail bits, and a midamble (or training sequence). The lengths of these fields vary with the burst type but the total burst length is 156.25 symbol periods. The most commonly used burst is the Normal Burst (NB).
+
+Multiplexing and Timing
+
+Each physical channel is time-multiplexed into multiple logical channels according to the rules of GSM 05.02. One logical channel constitute of 8 burst periods (or physical channels) which is called a Frame. Traffic channel multiplexing follows a 26-frame (0.12 second) cycle called a "multiframe". Control channels follow a 51-frame multiframe cycle. The C0T0 physical channel carries the SCH, which encodes the timing state of the BTS to facilitate synchronization to the TDMA pattern.
+
+GSM timing is driven by the serving BTS through the SCH and FCCH. All clocks in the handset, including the symbol clock and local oscillator, are slaved to signals received from the BTS, as described in GSM 05.10. BTSs in the GSM network can be asynchronous and all timing requirements in the GSM standard can be derived from a stratum-3 OCXO.
+
+Coding
+
+The coding sublayer provides forward error correction. As a general rule, each GSM channel uses a block parity code (usually a Fire code), a rate-1/2, 4th-order convolutional code and a 4-burst or 8-burst interleaver. Notable exceptions are the synchronization channel (SCH) and random access channel (RACH) that use single-burst transmissions and thus have no interleavers. For speech channels, vocoder bits are sorted into importance classes with different degrees of encoding protection applied to each class (GSM 05.03).
+
+Both 260-bit vocoder frames and 184-bit L2 control frames are coded into 456 bit L1 frames. On channels with 4-burst interleaving (BCCH, CCCH, SDCCH, SACCH), these 456 bits are interleaved into 4 radio bursts with 114 payload bits per burst. On channels with 8-burst interleaving (TCH, FACCH), these 456 bits are interleaved over 8 radio bursts so that each radio burst carries 57 bits from the current L1 frame and 57 bits from the previous L1 frame. Interleaving algorithms for the most common traffic and control channels are described in GSM 05.03 Sections 3.1.3, 3.2.3 and 4.1.4.
+
+Closed Loop Power Control
+
+The CLPC is a Layer 1 function, managing the power level at which the handset has to transmit according to the Received Signal Strength Indication (RSSI) parameter of YateBTS. The reason that you have such a function is because the power level is a critical component for communication. Without a power level management, the nicest thing that can happen is the voice call will have a poor quality. What it usually happens is that the voice call will be dropped or you cannot establish one due to the saturation of the YateBTS receiver.
+
+It's called a loop because twice a second there is a message exchange between the mobile station and YateBTS in the following order:
+
+The handset declares that it transmits at certain absolute value -- usually between 5 to 33dBm (Ptx).
+YateBTS acknowledges this, and it compares this value with the power at which the message has been received (Prx) -- usually between --50 to --110dbm (Prx).
+Then, according to the set RSSI target parameter value (Ptarget) in YateBTS, mBTS calculates a new transmitted power command (Pcommand) and sends it to the handset.
+The new commanded power level is:
+
+Pcommnand = Ptx + (Ptarget - Prx)
+This is subject to the power limits of the handset. In the lower bands (850 and 900), the power control range is 5-33 dBm. In the upped bands (1800 and 1900) the range is usually 5-30 dBm.
+
+The difference between transmitted and received power is due to path loss, (Lpath). The formula relating transmitted and received power to path loss is:
+
+Prx = Ptx - Lpath + Ga
+where Ga is the combination of the antenna gains and cable losses. This is expressed in decibels, so this is actually a logarithmic equation. Lpath is typically in the range of 120 to 170 dB.
+
+For a correct setup of the RSSI target parameter please see the subsection about "Radio.RSSITarget" in the "gsm_advanced" configuration section.
+
+Closed Loop Timing Control
+
+Varying radio propagation delays, due to varying distances of handsets from the base station, can cause handsets to violate the time-multiplexing rules of the Um interface. To solve this problem, GSM using a timing correction called timing advance, which is controlled in a closed-loop process similar to the process used for closed loop power control
