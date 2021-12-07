@@ -36,3 +36,5 @@ Amplificators:
  (bladeRF 6dBm=4mW 100ft)
  
  https://www.mouser.com/c/semiconductors/wireless-rf-integrated-circuits/rf-amplifier/?mounting%20style=SMD%2FSMT&type=Power%20Amplifiers&instock=y&sort=pricing
+ 
+ 3.5GHz https://www.richardsonrfpd.com/Products/Product/MMZ38333BT1
