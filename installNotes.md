@@ -1,3 +1,16 @@
+To add at App to Startup :
+sudo nano /etc/xdg/autostart/display.desktop
+
+then add here:
+
+[Desktop Entry]
+Name=YateBTS
+Exec=yate
+
+Ctrl O ---- "O" from Orange to save
+Enter
+Ctrl X
+
 To monitor usage:
 github: https://github.com/novaspirit/rpi_conky
 
