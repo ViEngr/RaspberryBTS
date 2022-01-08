@@ -1,3 +1,6 @@
+defaults write com.apple.dock autohide-delay -float 0; killall Dock
+Restore the default behavior using: defaults delete com.apple.dock autohide-delay; killall Dock
+
 To add at App to Startup :
 sudo nano /etc/xdg/autostart/display.desktop
 
