@@ -1,3 +1,14 @@
+https://rjmendez.github.io/posts/2019/02/Indeed_CTF_Embedded_2/
+http://kb.iplinkme.com/#TOC-Hardware-Notes
+https://bencejuhasz.com/2021/01/20/building-a-gsm-network-with-usrp1-uran-1-sdr-2021/
+
+https://learn.adafruit.com/adafruit-mini-pitft-135x240-color-tft-add-on-for-raspberry-pi
+https://krystof.io/mirroring-raspberry-pi-hdmi-video-to-a-st7789-1-3-inch-lcd-display/
+
+
+https://piprojects.us/iptables-firewall-rules-for-your-pi/
+
+
 defaults write com.apple.dock autohide-delay -float 0; killall Dock
 Restore the default behavior using: defaults delete com.apple.dock autohide-delay; killall Dock
 
