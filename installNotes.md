@@ -12,6 +12,8 @@ https://piprojects.us/iptables-firewall-rules-for-your-pi/
 defaults write com.apple.dock autohide-delay -float 0; killall Dock
 Restore the default behavior using: defaults delete com.apple.dock autohide-delay; killall Dock
 
+Autostart apache: sudo update-rc.d apache2 enable
+
 To add at App to Startup :
 sudo nano /etc/xdg/autostart/display.desktop
 
